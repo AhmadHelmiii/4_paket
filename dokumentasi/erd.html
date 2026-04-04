@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>ERD — Aplikasi Peminjaman Alat</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; margin: 0; padding: 24px; }
+  h2 { text-align:center; color:#4f46e5; margin-bottom:4px; }
+  p  { text-align:center; color:#6b7280; font-size:13px; margin-bottom:24px; }
+  .wrap { background:#fff; border-radius:12px; padding:32px; box-shadow:0 4px 20px rgba(0,0,0,.08); max-width:1100px; margin:0 auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>Entity Relationship Diagram (ERD)</h2>
+  <p>Aplikasi Peminjaman Alat — UKK RPL 2025/2026</p>
+  <div class="mermaid">
+erDiagram
+    USERS {
+        bigint id PK
+        varchar name
+        varchar email UK
+        varchar password
+        enum role "admin|petugas|peminjam"
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    KATEGORI_ALAT {
+        bigint id PK
+        varchar nama_kategori UK
+        text deskripsi
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ALAT {
+        bigint id PK
+        bigint kategori_id FK
+        varchar nama_alat
+        varchar kode_alat UK
+        int stok_total
+        int stok_tersedia
+        enum kondisi "baik|rusak ringan|rusak berat"
+        text deskripsi
+        varchar foto
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PEMINJAMAN {
+        bigint id PK
+        varchar kode_pinjam UK
+        bigint peminjam_id FK
+        bigint petugas_id FK
+        date tgl_pinjam
+        date tgl_kembali_rencana
+        enum status "menunggu|dipinjam|menunggu_konfirmasi|dikembalikan|ditolak"
+        text catatan
+        text catatan_petugas
+        text catatan_kembali
+        boolean konfirmasi_kembali
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    DETAIL_PEMINJAMAN {
+        bigint id PK
+        bigint peminjaman_id FK
+        bigint alat_id FK
+        int jumlah
+        enum kondisi_akhir "baik|rusak ringan|rusak berat"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PENGEMBALIAN {
+        bigint id PK
+        bigint peminjaman_id FK
+        bigint petugas_id FK
+        date tgl_kembali_aktual
+        int hari_terlambat
+        decimal denda
+        text keterangan
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    LOG_AKTIVITAS {
+        bigint id PK
+        bigint user_id FK
+        varchar aksi
+        varchar tabel_target
+        bigint target_id
+        text detail
+        varchar ip_address
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    USERS ||--o{ PEMINJAMAN : "mengajukan (peminjam_id)"
+    USERS ||--o{ PEMINJAMAN : "memproses (petugas_id)"
+    USERS ||--o{ PENGEMBALIAN : "memproses (petugas_id)"
+    USERS ||--o{ LOG_AKTIVITAS : "mencatat"
+    KATEGORI_ALAT ||--o{ ALAT : "memiliki"
+    ALAT ||--o{ DETAIL_PEMINJAMAN : "termasuk dalam"
+    PEMINJAMAN ||--o{ DETAIL_PEMINJAMAN : "memiliki"
+    PEMINJAMAN ||--o| PENGEMBALIAN : "memiliki"
+  </div>
+</div>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default', er: { diagramPadding: 30 } });</script>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Deskripsi Program — Aplikasi Peminjaman Alat</title>
+<style>
+body{font-family:'Segoe UI',sans-serif;background:#f8fafc;margin:0;padding:24px;}
+h2{text-align:center;color:#4f46e5;margin-bottom:4px;}
+.sub{text-align:center;color:#6b7280;font-size:13px;margin-bottom:32px;}
+.wrap{max-width:960px;margin:0 auto;}
+.modul{background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:24px;}
+.modul-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #eef2ff;}
+.modul-num{background:#4f46e5;color:#fff;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;}
+.modul-title{font-size:1.05rem;font-weight:800;color:#111827;}
+.modul-meta{font-size:.78rem;color:#6b7280;}
+.badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:.72rem;font-weight:700;margin-right:4px;}
+.badge-role{background:#eef2ff;color:#4f46e5;}
+.badge-method{background:#ecfdf5;color:#065f46;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:8px;}
+th{background:#f9fafb;padding:8px 10px;text-align:left;color:#6b7280;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;}
+td{padding:8px 10px;border-top:1px solid #f3f4f6;color:#374151;vertical-align:top;}
+tr:hover td{background:#fafafa;}
+.section-label{font-size:.75rem;font-weight:700;color:#4f46e5;text-transform:uppercase;letter-spacing:.06em;margin:12px 0 6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h2>Deskripsi Program per Modul</h2>
+<p class="sub">Aplikasi Peminjaman Alat — UKK RPL 2025/2026 | Paket 1</p>
+
+<!-- Modul 1 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">1</div>
+    <div><div class="modul-title">Login</div><div class="modul-meta"><span class="badge badge-role">Admin</span><span class="badge badge-role">Petugas</span><span class="badge badge-role">Peminjam</span> &nbsp; Route: /login &nbsp; <span class="badge badge-method">POST</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Autentikasi pengguna, verifikasi kredensial, dan redirect ke dashboard sesuai role.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>email</td><td>String</td><td>Alamat email terdaftar (required, format email valid)</td></tr>
+  <tr><td>2</td><td>password</td><td>String</td><td>Kata sandi pengguna (required, min 8 karakter)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Validasi format email dan password tidak kosong</td></tr>
+  <tr><td>2</td><td>Cari user berdasarkan email di tabel users</td></tr>
+  <tr><td>3</td><td>Bandingkan password dengan hash bcrypt (Hash::check())</td></tr>
+  <tr><td>4</td><td>Cek status is_active user</td></tr>
+  <tr><td>5</td><td>Buat session Laravel dan simpan data role</td></tr>
+  <tr><td>6</td><td>Catat log aktivitas aksi = 'login'</td></tr>
+  <tr><td>7</td><td>Redirect ke dashboard sesuai role (admin / petugas / peminjam)</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>session</td><td>Session berisi id, name, role pengguna</td></tr>
+  <tr><td>2</td><td>redirect URL</td><td>Dashboard sesuai role pengguna</td></tr>
+  <tr><td>3</td><td>log_aktivitas</td><td>Record baru aksi = 'login'</td></tr>
+  <tr><td>4</td><td>pesan error</td><td>Jika gagal: notifikasi email atau password salah</td></tr>
+  </table>
+</div>
+
+<!-- Modul 2 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">2</div>
+    <div><div class="modul-title">CRUD User</div><div class="modul-meta"><span class="badge badge-role">Admin</span> &nbsp; Route: /admin/users &nbsp; <span class="badge badge-method">GET/POST/PUT/DELETE</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Pengelolaan akun pengguna (admin, petugas, peminjam) oleh admin.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>name</td><td>String</td><td>Nama lengkap pengguna (required, max 100)</td></tr>
+  <tr><td>2</td><td>email</td><td>String</td><td>Email unik (required)</td></tr>
+  <tr><td>3</td><td>password</td><td>String</td><td>Kata sandi (required saat create, opsional saat edit)</td></tr>
+  <tr><td>4</td><td>role</td><td>Enum</td><td>admin / petugas / peminjam (required)</td></tr>
+  <tr><td>5</td><td>is_active</td><td>Boolean</td><td>Status aktif akun (default: true)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Validasi input dengan Laravel FormRequest</td></tr>
+  <tr><td>2</td><td>Cek duplikasi email di tabel users</td></tr>
+  <tr><td>3</td><td>Hash password dengan bcrypt sebelum disimpan</td></tr>
+  <tr><td>4</td><td>Simpan / update / delete record di tabel users</td></tr>
+  <tr><td>5</td><td>Catat log aktivitas CRUD user</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>users (table)</td><td>Record user baru atau yang diperbarui</td></tr>
+  <tr><td>2</td><td>flash message</td><td>Pesan sukses / gagal operasi</td></tr>
+  <tr><td>3</td><td>log_aktivitas</td><td>Record aksi create / update / delete user</td></tr>
+  </table>
+</div>
+
+<!-- Modul 3 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">3</div>
+    <div><div class="modul-title">CRUD Kategori Alat</div><div class="modul-meta"><span class="badge badge-role">Admin</span> &nbsp; Route: /admin/kategori &nbsp; <span class="badge badge-method">GET/POST/PUT/DELETE</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Pengelolaan kategori sebagai pengelompokan data alat.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>nama_kategori</td><td>String</td><td>Nama kategori (required, max 100, unik)</td></tr>
+  <tr><td>2</td><td>deskripsi</td><td>Text</td><td>Keterangan tambahan (opsional)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Validasi input dan cek duplikasi nama kategori</td></tr>
+  <tr><td>2</td><td>Simpan / update / delete record di tabel kategori_alat</td></tr>
+  <tr><td>3</td><td>Cek relasi alat sebelum delete (tolak jika masih ada alat terkait)</td></tr>
+  <tr><td>4</td><td>Catat log aktivitas</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>kategori_alat (table)</td><td>Record kategori baru atau yang diperbarui</td></tr>
+  <tr><td>2</td><td>flash message</td><td>Pesan sukses / gagal</td></tr>
+  <tr><td>3</td><td>log_aktivitas</td><td>Record aksi CRUD kategori</td></tr>
+  </table>
+</div>
+
+<!-- Modul 4 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">4</div>
+    <div><div class="modul-title">CRUD Alat</div><div class="modul-meta"><span class="badge badge-role">Admin</span><span class="badge badge-role">Petugas</span> &nbsp; Route: /alat &nbsp; <span class="badge badge-method">GET/POST/PUT/DELETE</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Pengelolaan data alat termasuk stok dan kondisi. stok_tersedia dikendalikan oleh trigger database.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>kategori_id</td><td>Integer FK</td><td>Kategori alat (required)</td></tr>
+  <tr><td>2</td><td>nama_alat</td><td>String</td><td>Nama alat (required, max 150)</td></tr>
+  <tr><td>3</td><td>kode_alat</td><td>String</td><td>Kode unik alat (required, unik)</td></tr>
+  <tr><td>4</td><td>stok_total</td><td>Integer</td><td>Total jumlah alat (required, min 1)</td></tr>
+  <tr><td>5</td><td>kondisi</td><td>Enum</td><td>baik / rusak ringan / rusak berat</td></tr>
+  <tr><td>6</td><td>foto</td><td>File</td><td>Foto alat (opsional, image max 2MB)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Validasi input: kode unik, stok > 0</td></tr>
+  <tr><td>2</td><td>Saat create: set stok_tersedia = stok_total</td></tr>
+  <tr><td>3</td><td>Simpan / update record di tabel alat</td></tr>
+  <tr><td>4</td><td>Saat delete: cek peminjaman aktif yang memakai alat ini</td></tr>
+  <tr><td>5</td><td>Catat log aktivitas</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>alat (table)</td><td>Record alat baru atau yang diperbarui</td></tr>
+  <tr><td>2</td><td>stok_tersedia</td><td>Diset = stok_total saat create</td></tr>
+  <tr><td>3</td><td>flash message</td><td>Pesan sukses / gagal</td></tr>
+  </table>
+</div>
+
+<!-- Modul 5 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">5</div>
+    <div><div class="modul-title">Pengajuan Peminjaman</div><div class="modul-meta"><span class="badge badge-role">Peminjam</span> &nbsp; Route: /peminjaman &nbsp; <span class="badge badge-method">POST</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Pengajuan peminjaman alat oleh peminjam. Status awal 'menunggu', stok belum dikurangi.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>alat_ids[]</td><td>Array FK</td><td>Alat yang dipilih (required, max 3)</td></tr>
+  <tr><td>2</td><td>jumlah[]</td><td>Array Integer</td><td>Jumlah per alat (min 1)</td></tr>
+  <tr><td>3</td><td>tgl_kembali_rencana</td><td>Date</td><td>Rencana tanggal kembali (required, max 7 hari)</td></tr>
+  <tr><td>4</td><td>catatan</td><td>Text</td><td>Keterangan tambahan (opsional)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Validasi input dan cek stok_tersedia >= jumlah yang diminta</td></tr>
+  <tr><td>2</td><td>Generate kode_pinjam unik (format: PJM-YYYYMMDD-XXX)</td></tr>
+  <tr><td>3</td><td>Simpan record ke tabel peminjaman dengan status = menunggu</td></tr>
+  <tr><td>4</td><td>Simpan detail ke tabel detail_peminjaman</td></tr>
+  <tr><td>5</td><td>Catat log aktivitas pengajuan</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>peminjaman (table)</td><td>Record baru dengan status = menunggu</td></tr>
+  <tr><td>2</td><td>detail_peminjaman (table)</td><td>Record detail alat yang diajukan</td></tr>
+  <tr><td>3</td><td>kode_pinjam</td><td>Kode transaksi unik</td></tr>
+  </table>
+</div>
+
+<!-- Modul 6 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">6</div>
+    <div><div class="modul-title">Persetujuan Peminjaman</div><div class="modul-meta"><span class="badge badge-role">Petugas</span><span class="badge badge-role">Admin</span> &nbsp; Route: /peminjaman/{id}/aksi &nbsp; <span class="badge badge-method">POST</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Persetujuan atau penolakan pengajuan. Trigger MySQL mengurangi stok_tersedia saat disetujui.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>aksi</td><td>Enum</td><td>setujui / tolak (required)</td></tr>
+  <tr><td>2</td><td>catatan_petugas</td><td>Text</td><td>Alasan penolakan atau catatan (opsional)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Validasi status peminjaman masih = menunggu</td></tr>
+  <tr><td>2</td><td>Jika setujui: update status = dipinjam, simpan petugas_id & tgl_pinjam</td></tr>
+  <tr><td>3</td><td>TRIGGER MySQL otomatis mengurangi stok_tersedia alat</td></tr>
+  <tr><td>4</td><td>Jika tolak: update status = ditolak</td></tr>
+  <tr><td>5</td><td>Catat log aktivitas persetujuan</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>peminjaman.status</td><td>Diperbarui: dipinjam / ditolak</td></tr>
+  <tr><td>2</td><td>alat.stok_tersedia</td><td>Berkurang otomatis via trigger (jika setuju)</td></tr>
+  <tr><td>3</td><td>flash message</td><td>Konfirmasi hasil aksi</td></tr>
+  </table>
+</div>
+
+<!-- Modul 7 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">7</div>
+    <div><div class="modul-title">Pengembalian Alat & Denda</div><div class="modul-meta"><span class="badge badge-role">Petugas</span><span class="badge badge-role">Admin</span> &nbsp; Route: /pengembalian/{id} &nbsp; <span class="badge badge-method">POST</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Pemrosesan pengembalian alat. Denda dihitung via MySQL function, stok_tersedia ditambah via trigger. Menggunakan Stored Procedure dengan START TRANSACTION, COMMIT, dan ROLLBACK.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>tgl_kembali</td><td>Date</td><td>Tanggal aktual pengembalian (required)</td></tr>
+  <tr><td>2</td><td>kondisi_akhir[]</td><td>Array Enum</td><td>Kondisi tiap alat: baik / rusak ringan / rusak berat</td></tr>
+  <tr><td>3</td><td>keterangan</td><td>Text</td><td>Catatan kondisi alat (opsional)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Validasi status peminjaman = dipinjam / menunggu_konfirmasi</td></tr>
+  <tr><td>2</td><td>Update kondisi_akhir di tabel detail_peminjaman</td></tr>
+  <tr><td>3</td><td>Panggil Stored Procedure proses_pengembalian()</td></tr>
+  <tr><td>4</td><td>SP: START TRANSACTION → hitung hari_terlambat (DATEDIFF)</td></tr>
+  <tr><td>5</td><td>SP: Panggil Function hitung_denda(hari) → denda = hari × Rp 5.000</td></tr>
+  <tr><td>6</td><td>SP: INSERT ke tabel pengembalian</td></tr>
+  <tr><td>7</td><td>SP: UPDATE status peminjaman = dikembalikan → COMMIT</td></tr>
+  <tr><td>8</td><td>TRIGGER MySQL otomatis menambah stok_tersedia alat</td></tr>
+  <tr><td>9</td><td>Jika error: EXIT HANDLER → ROLLBACK</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>pengembalian (table)</td><td>Record baru data pengembalian</td></tr>
+  <tr><td>2</td><td>denda</td><td>Nominal denda (Rp 0 jika tepat waktu)</td></tr>
+  <tr><td>3</td><td>alat.stok_tersedia</td><td>Bertambah otomatis via trigger</td></tr>
+  <tr><td>4</td><td>peminjaman.status</td><td>Diperbarui: dikembalikan</td></tr>
+  </table>
+</div>
+
+<!-- Modul 8 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">8</div>
+    <div><div class="modul-title">Laporan Peminjaman</div><div class="modul-meta"><span class="badge badge-role">Petugas</span><span class="badge badge-role">Admin</span> &nbsp; Route: /laporan &nbsp; <span class="badge badge-method">GET</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Rekap laporan peminjaman dengan filter tanggal, status, dan pengguna. Dapat dicetak sebagai PDF menggunakan DomPDF.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>tgl_mulai</td><td>Date</td><td>Awal rentang laporan (opsional)</td></tr>
+  <tr><td>2</td><td>tgl_selesai</td><td>Date</td><td>Akhir rentang laporan (opsional)</td></tr>
+  <tr><td>3</td><td>status</td><td>Enum</td><td>Filter status peminjaman (opsional)</td></tr>
+  <tr><td>4</td><td>peminjam_id</td><td>Integer FK</td><td>Filter per pengguna (opsional)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Query tabel peminjaman dengan JOIN ke users, alat, pengembalian</td></tr>
+  <tr><td>2</td><td>Terapkan filter parameter yang diberikan</td></tr>
+  <tr><td>3</td><td>Hitung ringkasan: total pinjam aktif, total denda, total peminjam</td></tr>
+  <tr><td>4</td><td>Render tampilan tabel laporan dengan pagination</td></tr>
+  <tr><td>5</td><td>Jika export PDF: generate via DomPDF (barryvdh/laravel-dompdf)</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>tabel laporan</td><td>Data rekap peminjaman sesuai filter</td></tr>
+  <tr><td>2</td><td>file PDF</td><td>Laporan siap cetak (opsional, format A4 landscape)</td></tr>
+  <tr><td>3</td><td>ringkasan</td><td>Total pinjam aktif, total denda, jumlah peminjam</td></tr>
+  </table>
+</div>
+
+<!-- Modul 9 -->
+<div class="modul">
+  <div class="modul-header">
+    <div class="modul-num">9</div>
+    <div><div class="modul-title">Log Aktivitas</div><div class="modul-meta"><span class="badge badge-role">Admin</span> &nbsp; Route: /admin/log &nbsp; <span class="badge badge-method">GET</span></div></div>
+  </div>
+  <p style="font-size:.875rem;color:#6b7280;margin:0 0 12px;">Monitoring seluruh aktivitas pengguna di sistem. Log ditulis otomatis di setiap modul, hanya bisa dibaca admin.</p>
+  <div class="section-label">Input</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Tipe</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>user_id</td><td>Integer FK</td><td>Filter log berdasarkan user tertentu (opsional)</td></tr>
+  <tr><td>2</td><td>aksi</td><td>String</td><td>Jenis aksi: login / logout / create / update / delete (opsional)</td></tr>
+  <tr><td>3</td><td>tgl_mulai / tgl_selesai</td><td>Date</td><td>Filter berdasarkan rentang waktu (opsional)</td></tr>
+  </table>
+  <div class="section-label">Proses</div>
+  <table><tr><th>#</th><th>Langkah</th></tr>
+  <tr><td>1</td><td>Query tabel log_aktivitas dengan parameter filter</td></tr>
+  <tr><td>2</td><td>JOIN ke tabel users untuk mendapatkan nama pelaku</td></tr>
+  <tr><td>3</td><td>Tampilkan hasil dalam tabel dengan pagination (20 per halaman)</td></tr>
+  </table>
+  <div class="section-label">Output</div>
+  <table><tr><th>#</th><th>Variabel</th><th>Keterangan</th></tr>
+  <tr><td>1</td><td>tabel log</td><td>Daftar aktivitas terfilter: user, aksi, target, waktu</td></tr>
+  <tr><td>2</td><td>detail</td><td>Kolom detail berisi data spesifik yang diubah / diakses</td></tr>
+  </table>
+</div>
+
+</div><!-- .wrap -->
+</body>
+</html>

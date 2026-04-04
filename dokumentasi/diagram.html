@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dokumentasi Diagram — Aplikasi Peminjaman Alat</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f4f5f9; color: #1f2937; }
+  .cover {
+    background: linear-gradient(135deg, #3730a3, #4f46e5, #7c3aed);
+    color: #fff; text-align: center;
+    padding: 60px 40px;
+    page-break-after: always;
+  }
+  .cover h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: .5rem; }
+  .cover h2 { font-size: 1.1rem; font-weight: 400; opacity: .8; margin-bottom: 2rem; }
+  .cover table { margin: 0 auto; border-collapse: collapse; min-width: 400px; }
+  .cover td { padding: .5rem 1.5rem; border: 1px solid rgba(255,255,255,.3); font-size: .95rem; }
+  .cover td:first-child { font-weight: 700; background: rgba(255,255,255,.1); }
+
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #fff; border-bottom: 1px solid #e5e7eb;
+    padding: .75rem 2rem;
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+  .nav a {
+    color: #4f46e5; text-decoration: none; font-size: .85rem;
+    font-weight: 600; padding: .3rem .75rem;
+    border-radius: 6px; transition: background .15s;
+  }
+  .nav a:hover { background: #eef2ff; }
+
+  .section {
+    max-width: 1100px; margin: 2rem auto;
+    padding: 0 1.5rem;
+    page-break-inside: avoid;
+  }
+  .section-header {
+    background: #fff; border: 1px solid #e5e7eb;
+    border-radius: 12px 12px 0 0;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 3px solid #4f46e5;
+  }
+  .section-header .num {
+    display: inline-block;
+    background: #4f46e5; color: #fff;
+    border-radius: 6px; padding: .2rem .6rem;
+    font-size: .75rem; font-weight: 800;
+    margin-right: .5rem;
+  }
+  .section-header h2 { display: inline; font-size: 1.15rem; font-weight: 800; color: #111827; }
+  .section-header p { font-size: .85rem; color: #6b7280; margin-top: .3rem; }
+  .diagram-box {
+    background: #fff; border: 1px solid #e5e7eb;
+    border-top: none; border-radius: 0 0 12px 12px;
+    padding: 2rem; overflow-x: auto;
+    display: flex; justify-content: center;
+  }
+  .diagram-box .mermaid { max-width: 100%; }
+
+  @media print {
+    .nav { display: none; }
+    .section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>📋 Dokumentasi Diagram</h1>
+  <h2>Aplikasi Peminjaman Alat — UKK RPL 2025/2026</h2>
+  <br>
+  <table>
+    <tr><td>Judul Tugas</td><td>Pengembangan Aplikasi Peminjaman Alat</td></tr>
+    <tr><td>Konsentrasi</td><td>Rekayasa Perangkat Lunak</td></tr>
+    <tr><td>Kode Paket</td><td>KM25.4.1.1 — Paket 1</td></tr>
+    <tr><td>Tahun Pelajaran</td><td>2025/2026</td></tr>
+    <tr><td>Jabatan Kerja</td><td>Pemrogram Junior (Junior Coder)</td></tr>
+  </table>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <a href="#erd">1. ERD</a>
+  <a href="#usecase">2. Use Case</a>
+  <a href="#flowchart-login">3. Flowchart Login</a>
+  <a href="#flowchart-pinjam">4. Flowchart Peminjaman</a>
+  <a href="#flowchart-kembali">5. Flowchart Pengembalian</a>
+  <a href="#sequence">6. Sequence Diagram</a>
+  <a href="#activity">7. Activity Diagram</a>
+</div>
+
+<!-- 1. ERD -->
+<div class="section" id="erd">
+  <div class="section-header">
+    <span class="num">1</span><h2>Entity Relationship Diagram (ERD)</h2>
+    <p>Relasi antar tabel dalam database aplikasi peminjaman alat</p>
+  </div>
+  <div class="diagram-box">
+    <div class="mermaid">
+erDiagram
+    USERS {
+        bigint id PK
+        varchar name
+        varchar email UK
+        varchar password
+        enum role "admin|petugas|peminjam"
+        boolean is_active
+        timestamp created_at
+    }
+    KATEGORI_ALAT {
+        bigint id PK
+        varchar nama_kategori UK
+        text deskripsi
+        timestamp created_at
+    }
+    ALAT {
+        bigint id PK
+        bigint kategori_id FK
+        varchar nama_alat
+        varchar kode_alat UK
+        int stok_total
+        int stok_tersedia
+        enum kondisi "baik|rusak ringan|rusak berat"
+        text deskripsi
+        varchar foto
+        timestamp created_at
+    }
+    PEMINJAMAN {
+        bigint id PK
+        varchar kode_pinjam UK
+        bigint peminjam_id FK
+        bigint petugas_id FK
+        date tgl_pinjam
+        date tgl_kembali_rencana
+        enum status "menunggu|dipinjam|menunggu_konfirmasi|dikembalikan|ditolak"
+        text catatan
+        text catatan_petugas
+        text catatan_kembali
+        boolean konfirmasi_kembali
+        timestamp created_at
+    }
+    DETAIL_PEMINJAMAN {
+        bigint id PK
+        bigint peminjaman_id FK
+        bigint alat_id FK
+        int jumlah
+        enum kondisi_akhir "baik|rusak ringan|rusak berat"
+        timestamp created_at
+    }
+    PENGEMBALIAN {
+        bigint id PK
+        bigint peminjaman_id FK
+        bigint petugas_id FK
+        date tgl_kembali_aktual
+        int hari_terlambat
+        decimal denda
+        text keterangan
+        timestamp created_at
+    }
+    LOG_AKTIVITAS {
+        bigint id PK
+        bigint user_id FK
+        varchar aksi
+        varchar tabel_target
+        bigint target_id
+        text detail
+        varchar ip_address
+        timestamp created_at
+    }
+
+    USERS ||--o{ PEMINJAMAN : "mengajukan (peminjam_id)"
+    USERS 

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Flowchart — Aplikasi Peminjaman Alat</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+body { font-family:'Segoe UI',sans-serif; background:#f8fafc; margin:0; padding:24px; }
+h2 { text-align:center; color:#4f46e5; margin-bottom:4px; }
+p  { text-align:center; color:#6b7280; font-size:13px; margin-bottom:24px; }
+.wrap { background:#fff; border-radius:12px; padding:32px; box-shadow:0 4px 20px rgba(0,0,0,.08); max-width:1100px; margin:0 auto; margin-bottom:32px; }
+.grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; max-width:1100px; margin:0 auto; }
+.card { background:#fff; border-radius:12px; padding:24px; box-shadow:0 4px 20px rgba(0,0,0,.08); }
+.card h3 { text-align:center; color:#4f46e5; margin:0 0 16px; font-size:15px; }
+</style>
+</head>
+<body>
+
+<div style="text-align:center;margin-bottom:24px;">
+  <h2>Flowchart Proses Utama</h2>
+  <p>Aplikasi Peminjaman Alat — UKK RPL 2025/2026</p>
+</div>
+
+<div class="grid">
+  <!-- Login -->
+  <div class="card">
+    <h3>1. Proses Login</h3>
+    <div class="mermaid">
+flowchart TD
+    A([Mulai]) --> B[/Input Email & Password/]
+    B --> C{Format Valid?}
+    C -- Tidak --> D[Tampil Pesan Error]
+    D --> B
+    C -- Ya --> E[Cek Email di DB]
+    E --> F{Email Ditemukan?}
+    F -- Tidak --> G[Gagal Login]
+    G --> B
+    F -- Ya --> H[Verifikasi Password\nbcrypt Hash::check]
+    H --> I{Password Cocok?}
+    I -- Tidak --> G
+    I -- Ya --> J{is_active = true?}
+    J -- Tidak --> K[Akun Nonaktif\nTolak Login]
+    J -- Ya --> L[Buat Session\nSimpan Role]
+    L --> M[Catat Log Login]
+    M --> N{Role?}
+    N -- Admin --> O[Dashboard Admin]
+    N -- Petugas --> P[Dashboard Petugas]
+    N -- Peminjam --> Q[Dashboard Peminjam]
+    O & P & Q --> R([Selesai])
+
+    style A fill:#4f46e5,color:#fff
+    style R fill:#4f46e5,color:#fff
+    style G fill:#fef2f2,color:#991b1b
+    style K fill:#fef2f2,color:#991b1b
+    style D fill:#fef2f2,color:#991b1b
+    </div>
+  </div>
+
+  <!-- Peminjaman -->
+  <div class="card">
+    <h3>2. Proses Peminjaman</h3>
+    <div class="mermaid">
+flowchart TD
+    A([Mulai]) --> B[Peminjam Pilih Alat\ndari Katalog]
+    B --> C{Stok Tersedia?}
+    C -- Tidak --> D[Notif Stok Habis]
+    D --> B
+    C -- Ya --> E[/Isi Form Pengajuan\nJumlah & Tgl Kembali/]
+    E --> F{Validasi Input}
+    F -- Gagal --> G[Tampil Error]
+    G --> E
+    F -- OK --> H[Generate Kode Pinjam\nPJM-YYYYMMDD-XXX]
+    H --> I[Simpan Peminjaman\nstatus = menunggu]
+    I --> J[Catat Log Aktivitas]
+    J --> K[Petugas Review\nPengajuan]
+    K --> L{Keputusan?}
+    L -- Tolak --> M[Status = ditolak\nCatat Log]
+    L -- Setujui --> N[Status = dipinjam\nTgl Pinjam = Hari Ini]
+    N --> O[TRIGGER MySQL\nKurangi stok_tersedia]
+    O --> P[Catat Log Persetujuan]
+    P --> Q([Selesai])
+    M --> Q
+
+    style A fill:#4f46e5,color:#fff
+    style Q fill:#4f46e5,color:#fff
+    style M fill:#fef2f2,color:#991b1b
+    style O fill:#ecfdf5,color:#065f46
+    </div>
+  </div>
+
+  <!-- Pengembalian -->
+  <div class="card">
+    <h3>3. Proses Pengembalian & Denda</h3>
+    <div class="mermaid">
+flowchart TD
+    A([Mulai]) --> B[Peminjam Klik\nKonfirmasi Kembali]
+    B --> C[Status =\nmenunggu_konfirmasi]
+    C --> D[Petugas Buka\nForm Pengembalian]
+    D --> E[/Input Tgl Kembali\n& Kondisi Alat/]
+    E --> F[Panggil Stored Procedure\nproses_pengembalian]
+    F --> G[START TRANSACTION]
+    G --> H[Hitung Hari Terlambat\nDATEDIFF]
+    H --> I[Panggil Function\nhitung_denda hari x 5000]
+    I --> J{Terlambat?}
+    J -- Tidak --> K[Denda = Rp 0]
+    J -- Ya --> L[Denda = Hari x Rp 5.000]
+    K & L --> M[INSERT pengembalian]
+    M --> N[UPDATE status =\ndikembalikan]
+    N --> O[TRIGGER MySQL\nTambah stok_tersedia]
+    O --> P[COMMIT]
+    P --> Q[Catat Log Pengembalian]
+    Q --> R([Selesai])
+
+    style A fill:#4f46e5,color:#fff
+    style R fill:#4f46e5,color:#fff
+    style G fill:#fffbeb,color:#92400e
+    style P fill:#ecfdf5,color:#065f46
+    style O fill:#ecfdf5,color:#065f46
+    style L fill:#fef2f2,color:#991b1b
+    </div>
+  </div>
+</div>
+
+<script>mermaid.initialize({ startOnLoad:true, theme:'default', flowchart:{ curve:'basis' } });</script>
+</body>
+</html>
