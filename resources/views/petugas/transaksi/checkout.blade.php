@@ -4,9 +4,9 @@
 @section('page-subtitle', 'Proses pembayaran dan checkout kendaraan')
 
 @section('content')
-<div style="max-width:520px; display:flex; flex-direction:column; gap:16px;">
+<div style="max-width:520px; margin:0 auto; display:flex; flex-direction:column; gap:16px;">
 
-    <x-form-card>
+    <div class="card" style="padding:24px 28px;">
         <p style="font-size:14px; font-weight:700; color:#0f172a; margin-bottom:14px;">
             <i class="fa-solid fa-magnifying-glass" style="color:#2563eb; margin-right:8px;"></i>Cari Kendaraan
         </p>
@@ -19,7 +19,7 @@
                 <i class="fa-solid fa-search"></i> Cari
             </button>
         </form>
-    </x-form-card>
+    </div>
 
     @isset($transaksi)
     <div class="card" style="overflow:hidden;">

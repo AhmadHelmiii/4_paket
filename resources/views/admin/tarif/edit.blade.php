@@ -4,8 +4,8 @@
 @section('page-subtitle', 'Perbarui tarif ' . ucfirst($tarif->jenis_kendaraan))
 
 @section('content')
-<div style="max-width:480px;">
-    <div class="card" style="padding:24px;">
+<div style="max-width:520px; margin:0 auto;">
+    <div class="card" style="padding:28px 32px;">
         <form method="POST" action="{{ route('admin.tarif.update', $tarif->id_tarif) }}">
             @csrf @method('PUT')
             <div style="margin-bottom:20px;">

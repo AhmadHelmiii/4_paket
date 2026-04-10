@@ -18,13 +18,22 @@
     {{-- Search & Filter --}}
     <div class="card" style="padding:16px 20px;">
         <form method="GET" action="{{ route('petugas.transaksi.index') }}" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <div style="position:relative; flex:1; min-width:200px;">
+            <div style="position:relative; flex:1; min-width:180px;">
                 <i class="fa-solid fa-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#94a3b8; font-size:13px;"></i>
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Cari plat nomor..."
                        style="width:100%; padding:9px 12px 9px 36px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:13.5px; outline:none; transition:all 0.15s; background:#f8fafc; text-transform:uppercase;"
                        onfocus="this.style.borderColor='#2563eb';this.style.background='#fff'"
                        onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc'">
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <input type="date" name="dari" value="{{ request('dari') }}"
+                       style="padding:9px 12px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:13px; color:#374151; background:#f8fafc; outline:none; cursor:pointer;"
+                       onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e2e8f0'">
+                <span style="font-size:12px; color:#94a3b8;">s/d</span>
+                <input type="date" name="sampai" value="{{ request('sampai') }}"
+                       style="padding:9px 12px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:13px; color:#374151; background:#f8fafc; outline:none; cursor:pointer;"
+                       onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e2e8f0'">
             </div>
             <select name="status" onchange="this.form.submit()"
                     style="padding:9px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:13.5px; color:#374151; background:#f8fafc; outline:none; cursor:pointer;">
@@ -35,7 +44,7 @@
             <button type="submit" class="btn-primary" style="padding:9px 18px;">
                 <i class="fa-solid fa-search"></i> Cari
             </button>
-            @if(request('search') || request('status'))
+            @if(request('search') || request('status') || request('dari') || request('sampai'))
             <a href="{{ route('petugas.transaksi.index') }}" style="padding:9px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:13px; color:#64748b; text-decoration:none; background:#f8fafc;">
                 <i class="fa-solid fa-xmark"></i> Reset
             </a>
@@ -69,8 +78,8 @@
                             <span style="font-size:12.5px; text-transform:capitalize; color:#475569; background:#f8fafc; padding:3px 10px; border-radius:99px; font-weight:500;">{{ $t->kendaraan->jenis_kendaraan }}</span>
                         </td>
                         <td style="padding:13px 20px; font-size:13px; color:#475569;">{{ $t->area->nama_area }}</td>
-                        <td style="padding:13px 20px; font-size:12.5px; color:#475569; white-space:nowrap;">{{ $t->waktu_masuk->format('d/m H:i') }}</td>
-                        <td style="padding:13px 20px; font-size:12.5px; color:#475569; white-space:nowrap;">{{ $t->waktu_keluar ? $t->waktu_keluar->format('d/m H:i') : '—' }}</td>
+                        <td style="padding:13px 20px; font-size:12.5px; color:#475569; white-space:nowrap;">{{ $t->waktu_masuk->format('d/m/Y H:i') }}</td>
+                        <td style="padding:13px 20px; font-size:12.5px; color:#475569; white-space:nowrap;">{{ $t->waktu_keluar ? $t->waktu_keluar->format('d/m/Y H:i') : '—' }}</td>
                         <td style="padding:13px 20px; font-size:13px; font-weight:700; color:{{ $t->biaya_total ? '#2563eb' : '#94a3b8' }};">
                             {{ $t->biaya_total ? 'Rp '.number_format($t->biaya_total,0,',','.') : '—' }}
                         </td>

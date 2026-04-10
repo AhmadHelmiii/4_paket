@@ -4,8 +4,8 @@
 @section('page-subtitle', 'Buat akun pengguna baru')
 
 @section('content')
-<div style="max-width:520px;">
-    <x-form-card>
+<div style="max-width:520px; margin:0 auto;">
+    <div class="card" style="padding:28px 32px;">
         <form method="POST" action="{{ route('admin.user.store') }}">
             @csrf
             <div style="margin-bottom:20px;">
@@ -51,7 +51,7 @@
                 <a href="{{ route('admin.user.index') }}" class="btn-ghost">Batal</a>
             </div>
         </form>
-    </x-form-card>
+    </div>
 </div>
 <script>
 function selectRole(el, val) {

@@ -26,6 +26,14 @@ class TransaksiController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('dari')) {
+            $query->whereDate('waktu_masuk', '>=', $request->dari);
+        }
+
+        if ($request->filled('sampai')) {
+            $query->whereDate('waktu_masuk', '<=', $request->sampai);
+        }
+
         $transaksis = $query->orderByDesc('waktu_masuk')->paginate(15)->withQueryString();
         return view('petugas.transaksi.index', compact('transaksis'));
     }

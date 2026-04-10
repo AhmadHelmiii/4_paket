@@ -39,14 +39,23 @@
         }
         .sidebar-logo-inner { display: flex; align-items: center; gap: 10px; overflow: hidden; }
         .sidebar-logo-icon {
-            width: 36px; height: 36px; flex-shrink: 0;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+            width: 38px; height: 38px; flex-shrink: 0;
+            background: linear-gradient(135deg, #1e40af, #2563eb, #3b82f6);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative; overflow: hidden;
         }
+        .sidebar-logo-icon::before {
+            content: '';
+            position: absolute; top: -6px; right: -6px;
+            width: 20px; height: 20px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+        }
+        .sidebar-logo-icon svg { position: relative; z-index: 1; }
         .sidebar-logo-text { overflow: hidden; white-space: nowrap; }
-        .sidebar-logo-text .brand { color: #0f172a; font-weight: 800; font-size: 14px; line-height: 1.3; }
-        .sidebar-logo-text .sub { color: #94a3b8; font-size: 11px; }
+        .sidebar-logo-text .brand { color: #0f172a; font-weight: 800; font-size: 14px; line-height: 1.3; letter-spacing: -0.3px; }
+        .sidebar-logo-text .sub { color: #94a3b8; font-size: 10.5px; letter-spacing: 0.02em; }
 
         .sidebar-user {
             padding: 12px 14px;
@@ -158,10 +167,14 @@
         <div class="sidebar-logo">
             <div class="sidebar-logo-inner">
                 <div class="sidebar-logo-icon">
-                    <i class="fa-solid fa-square-parking" style="color:#fff; font-size:16px;"></i>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <text x="4" y="18" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="17" fill="white">P</text>
+                        <circle cx="19" cy="6" r="3.5" fill="white" fill-opacity="0.25"/>
+                        <circle cx="19" cy="6" r="1.8" fill="white" fill-opacity="0.7"/>
+                    </svg>
                 </div>
                 <div class="sidebar-logo-text" x-show="open">
-                    <div class="brand">Parking Excellence</div>
+                    <div class="brand"><span style="color:#2563eb;">Parking</span> Excellence</div>
                     <div class="sub">Management System</div>
                 </div>
             </div>

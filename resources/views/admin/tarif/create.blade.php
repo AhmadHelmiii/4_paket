@@ -4,8 +4,8 @@
 @section('page-subtitle', 'Atur tarif parkir untuk jenis kendaraan baru')
 
 @section('content')
-<div style="max-width:480px;">
-    <div class="card" style="padding:24px;">
+<div style="max-width:520px; margin:0 auto;">
+    <div class="card" style="padding:28px 32px;">
         <form method="POST" action="{{ route('admin.tarif.store') }}">
             @csrf
             <div style="margin-bottom:20px;">

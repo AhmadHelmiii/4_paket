@@ -98,6 +98,7 @@
                     <th style="padding:10px 20px; text-align:left; font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Jenis</th>
                     <th style="padding:10px 20px; text-align:left; font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Area</th>
                     <th style="padding:10px 20px; text-align:left; font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Waktu Masuk</th>
+                    <th style="padding:10px 20px; text-align:left; font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Waktu Keluar</th>
                     <th style="padding:10px 20px; text-align:left; font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Status</th>
                 </tr>
             </thead>
@@ -108,6 +109,7 @@
                     <td style="padding:13px 20px; font-size:13px; color:#475569; text-transform:capitalize;">{{ $t->kendaraan->jenis_kendaraan }}</td>
                     <td style="padding:13px 20px; font-size:13px; color:#475569;">{{ $t->area->nama_area }}</td>
                     <td style="padding:13px 20px; font-size:13px; color:#475569;">{{ $t->waktu_masuk->format('H:i') }}</td>
+                    <td style="padding:13px 20px; font-size:13px; color:#475569;">{{ $t->waktu_keluar ? $t->waktu_keluar->format('H:i') : '-' }}</td>
                     <td style="padding:13px 20px;">
                         @if($t->status === 'masuk')
                         <span class="badge" style="background:#dcfce7; color:#166534;"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:5px;"></span>Masuk</span>
@@ -117,7 +119,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="5" style="padding:40px; text-align:center; color:#94a3b8; font-size:13px;">Belum ada transaksi hari ini</td></tr>
+                <tr><td colspan="6" style="padding:40px; text-align:center; color:#94a3b8; font-size:13px;">Belum ada transaksi hari ini</td></tr>
                 @endforelse
             </tbody>
         </table>
